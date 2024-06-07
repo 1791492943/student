@@ -1,4 +1,4 @@
-package com.student.domain;
+package com.student.domain.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -6,15 +6,19 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.util.Date;
+
+import com.student.common.BaseEntity;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * 学生处分关联表
  * @TableName student_punishment
  */
+@EqualsAndHashCode(callSuper = true)
 @TableName(value ="student_punishment")
 @Data
-public class StudentPunishment implements Serializable {
+public class StudentPunishment extends BaseEntity implements Serializable {
     /**
      * 主键
      */
@@ -27,9 +31,9 @@ public class StudentPunishment implements Serializable {
     private Long studentId;
 
     /**
-     * 处分id
+     * 处分等级
      */
-    private Long punishmentLevel;
+    private Integer punishmentLevel;
 
     /**
      * 备注
@@ -51,16 +55,6 @@ public class StudentPunishment implements Serializable {
      * 处分时间
      */
     private Date punishmentTime;
-
-    /**
-     * 创建时间
-     */
-    private Date createTime;
-
-    /**
-     * 更新时间
-     */
-    private Date updateTime;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

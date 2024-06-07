@@ -1,7 +1,10 @@
 package com.student.service;
 
-import com.student.domain.Punishment;
+import com.student.domain.entity.Punishment;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.student.domain.entity.StudentPunishment;
+
+import java.util.List;
 
 /**
 * @author 17914
@@ -10,4 +13,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 */
 public interface PunishmentService extends IService<Punishment> {
 
+    void saveList(List<StudentPunishment> sp);
+
+    void removeId(Long id);
 }

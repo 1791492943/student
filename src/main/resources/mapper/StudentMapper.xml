@@ -4,18 +4,43 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.student.mapper.StudentMapper">
 
-    <resultMap id="BaseResultMap" type="com.student.domain.Student">
+    <resultMap id="BaseResultMap" type="com.student.domain.entity.Student">
             <id property="id" column="id" jdbcType="BIGINT"/>
             <result property="name" column="name" jdbcType="VARCHAR"/>
             <result property="sex" column="sex" jdbcType="VARCHAR"/>
-            <result property="classId" column="class_id" jdbcType="INTEGER"/>
             <result property="studentCode" column="student_code" jdbcType="VARCHAR"/>
+            <result property="level" column="level" jdbcType="INTEGER"/>
             <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
             <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
     </resultMap>
 
-    <sql id="Base_Column_List">
-        id,name,sex,
-        class_id,student_code,create_time,update_time
-    </sql>
+
+    <select id="getSutdent" resultType="com.student.domain.entity.Student">
+        select s.*
+        from student s
+        left join student_class sc on s.id = sc.student_id
+        left join class c on c.id = sc.class_id
+        <where>
+            <if test="name != null and name != ''">
+                and s.name like concat('%', #{name}, '%')
+            </if>
+
+            <if test="sex != null and sex != ''">
+                and s.sex = #{sex}
+            </if>
+
+            <if test="studentCode != null and studentCode != ''">
+                and s.student_code = #{studentCode}
+            </if>
+
+            <if test="classId != null">
+                and c.id = #{classId}
+            </if>
+
+            <if test="level != null">
+                and s.level = #{level}
+            </if>
+        </where>
+
+    </select>
 </mapper>

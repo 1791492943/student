@@ -1,6 +1,6 @@
 package com.student.service;
 
-import com.student.domain.StudentPunishment;
+import com.student.domain.entity.StudentPunishment;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**

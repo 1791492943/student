@@ -1,7 +1,7 @@
 package com.student.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.student.domain.Class;
+import com.student.domain.entity.Class;
 import com.student.service.ClassService;
 import com.student.mapper.ClassMapper;
 import org.springframework.stereotype.Service;

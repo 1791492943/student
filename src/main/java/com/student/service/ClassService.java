@@ -1,6 +1,6 @@
 package com.student.service;
 
-import com.student.domain.Class;
+import com.student.domain.entity.Class;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**

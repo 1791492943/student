@@ -1,7 +1,7 @@
 package com.student.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.student.domain.StudentPunishment;
+import com.student.domain.entity.StudentPunishment;
 import com.student.service.StudentPunishmentService;
 import com.student.mapper.StudentPunishmentMapper;
 import org.springframework.stereotype.Service;

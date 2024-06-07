@@ -1,4 +1,4 @@
-package com.student.domain;
+package com.student.domain.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -6,15 +6,19 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.util.Date;
+
+import com.student.common.BaseEntity;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
- * 班级表
- * @TableName class
+ * 学生班级关联表
+ * @TableName student_class
  */
-@TableName(value ="class")
+@EqualsAndHashCode(callSuper = true)
+@TableName(value ="student_class")
 @Data
-public class Class implements Serializable {
+public class StudentClass extends BaseEntity implements Serializable {
     /**
      * 主键
      */
@@ -22,25 +26,14 @@ public class Class implements Serializable {
     private Long id;
 
     /**
-     * 班级名称
+     * 班级id
      */
-    private String name;
+    private Long classId;
 
     /**
-     * 年份
+     * 学生id
      */
-    @TableField(value = "`year`")
-    private Integer year;
-
-    /**
-     * 创建时间
-     */
-    private Date createTime;
-
-    /**
-     * 更新时间
-     */
-    private Date updateTime;
+    private Long studentId;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

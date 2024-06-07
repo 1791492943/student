@@ -1,7 +1,11 @@
 package com.student.service;
 
-import com.student.domain.Student;
+import com.student.domain.bo.StudentBo;
+import com.student.domain.entity.Student;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.student.domain.vo.StudentVo;
+
+import java.util.List;
 
 /**
 * @author 17914
@@ -10,4 +14,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
 */
 public interface StudentService extends IService<Student> {
 
+    List<StudentVo> getStudentVoList(StudentBo bo);
 }
