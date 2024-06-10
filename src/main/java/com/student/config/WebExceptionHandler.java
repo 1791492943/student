@@ -9,6 +9,7 @@ public class WebExceptionHandler {
 
     @ExceptionHandler
     public R<Void> exceptionHandler(Exception e) {
+        e.printStackTrace();
         return R.error(e.getMessage());
     }
 

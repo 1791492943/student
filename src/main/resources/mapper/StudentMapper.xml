@@ -15,8 +15,8 @@
     </resultMap>
 
 
-    <select id="getSutdent" resultType="com.student.domain.entity.Student">
-        select s.*
+    <select id="getStudent" resultType="com.student.domain.entity.Student">
+        select distinct s.*
         from student s
         left join student_class sc on s.id = sc.student_id
         left join class c on c.id = sc.class_id

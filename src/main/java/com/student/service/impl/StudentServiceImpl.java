@@ -14,8 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 /**
 * @author 17914
@@ -34,7 +32,7 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student>
 
     @Override
     public List<StudentVo> getStudentVoList(StudentBo bo) {
-        List<Student> student = baseMapper.getSutdent(bo);
+        List<Student> student = baseMapper.getStudent(bo);
         if(student.isEmpty()) return List.of();
 
         List<Class> classList = classMapper.selectList(null);

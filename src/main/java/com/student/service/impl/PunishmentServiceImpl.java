@@ -1,18 +1,20 @@
 package com.student.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.student.domain.entity.Class;
 import com.student.domain.entity.Punishment;
 import com.student.domain.entity.Student;
 import com.student.domain.entity.StudentPunishment;
-import com.student.mapper.StudentMapper;
-import com.student.mapper.StudentPunishmentMapper;
+import com.student.domain.vo.PunishmentVo;
+import com.student.domain.vo.StudentPunishmentVo;
+import com.student.mapper.*;
 import com.student.service.PunishmentService;
-import com.student.mapper.PunishmentMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 /**
@@ -30,10 +32,16 @@ public class PunishmentServiceImpl extends ServiceImpl<PunishmentMapper, Punishm
     @Autowired
     private StudentPunishmentMapper studentPunishmentMapper;
 
+    @Autowired
+    private ClassMapper classMapper;
+
+    @Autowired
+    private StudentClassMapper studentClassMapper;
+
     @Override
-    public void saveList(List<StudentPunishment> sp) {
-        if(sp.size() > 1){
-            List<Long> list = sp.stream().map(StudentPunishment::getStudentId).toList();
+    public void saveList(StudentPunishmentVo sp) {
+        if(sp.getStudentIds().size() > 1){
+            List<Long> list = sp.getStudentIds();
             List<Student> students = studentMapper.selectBatchIds(list);
             Set<Integer> collect = students.stream().map(Student::getLevel).collect(Collectors.toSet());
             if(collect.size() > 1){
@@ -41,19 +49,54 @@ public class PunishmentServiceImpl extends ServiceImpl<PunishmentMapper, Punishm
             }
         }
 
-        for (StudentPunishment studentPunishment : sp) {
-            studentPunishmentMapper.insert(studentPunishment);
-            Student student = new Student();
-            student.setId(studentPunishment.getStudentId());
-            student.setLevel(studentPunishment.getPunishmentLevel());
-            studentMapper.updateById(student);
-        }
+        //todo 查出学生 然后设置StudentPunishment
+
+
+//        for (StudentPunishment studentPunishment : sp) {
+//            studentPunishmentMapper.insert(studentPunishment);
+//            Student student = new Student();
+//            student.setId(studentPunishment.getStudentId());
+//            student.setLevel(studentPunishment.getPunishmentLevel());
+//            studentMapper.updateById(student);
+//        }
     }
 
     @Override
     public void removeId(Long id) {
         //todo 删除需要校验 只能从给最后一个开始删除
         studentPunishmentMapper.deleteById(id);
+    }
+
+    @Override
+    public List<PunishmentVo> list(Long studentId) {
+        List<StudentPunishment> studentPunishments = studentPunishmentMapper.selectList(
+                new LambdaQueryWrapper<StudentPunishment>()
+                        .eq(studentId != null, StudentPunishment::getStudentId, studentId)
+                        .orderByDesc(StudentPunishment::getPunishmentTime)
+        );
+        if(studentPunishments.isEmpty()) return List.of();
+
+        Map<Long, Student> studentMap = new HashMap<>();
+        studentMapper.selectList(null).forEach(student -> studentMap.put(student.getId(), student));
+
+        Map<Long, Class> classMap = new HashMap<>();
+        classMapper.selectList(null).forEach(c -> classMap.put(c.getId(),c));
+
+        Map<Integer,Punishment> punishmentMap = new HashMap<>();
+        baseMapper.selectList(null).forEach(p -> punishmentMap.put(p.getLevel(),p));
+
+        Map<Long,List<Class>> studentClassMap = new HashMap<>();
+        studentClassMapper.selectList(null).forEach(sc ->
+                studentClassMap.computeIfAbsent(sc.getStudentId(), k->new ArrayList<>()).add(classMap.get(sc.getClassId())));
+
+        return studentPunishments.stream().map(item -> {
+            PunishmentVo punishmentVo = new PunishmentVo();
+            punishmentVo.setStudentPunishment(item);
+            punishmentVo.setStudent(studentMap.get(item.getStudentId()));
+            punishmentVo.setPunishment(punishmentMap.get(item.getPunishmentLevel()));
+            punishmentVo.setClassList(studentClassMap.get(item.getStudentId()));
+            return punishmentVo;
+        }).toList();
     }
 }
 

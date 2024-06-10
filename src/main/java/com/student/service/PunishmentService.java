@@ -3,6 +3,8 @@ package com.student.service;
 import com.student.domain.entity.Punishment;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.student.domain.entity.StudentPunishment;
+import com.student.domain.vo.PunishmentVo;
+import com.student.domain.vo.StudentPunishmentVo;
 
 import java.util.List;
 
@@ -13,7 +15,10 @@ import java.util.List;
 */
 public interface PunishmentService extends IService<Punishment> {
 
-    void saveList(List<StudentPunishment> sp);
+    void saveList(StudentPunishmentVo sp);
 
     void removeId(Long id);
+
+    List<PunishmentVo> list(Long studentId);
+
 }

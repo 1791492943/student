@@ -21,4 +21,5 @@
         remark,year,semester,
         punishment_time,create_time,update_time
     </sql>
+
 </mapper>

@@ -3,7 +3,6 @@ package com.student.mapper;
 import com.student.domain.bo.StudentBo;
 import com.student.domain.entity.Student;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.student.domain.vo.StudentVo;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -17,7 +16,7 @@ import java.util.List;
 @Mapper
 public interface StudentMapper extends BaseMapper<Student> {
 
-    List<Student> getSutdent(StudentBo bo);
+    List<Student> getStudent(StudentBo bo);
 }
 
 

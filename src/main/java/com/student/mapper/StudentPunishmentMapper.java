@@ -2,7 +2,10 @@ package com.student.mapper;
 
 import com.student.domain.entity.StudentPunishment;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.student.domain.vo.PunishmentVo;
 import org.apache.ibatis.annotations.Mapper;
+
+import java.util.List;
 
 /**
 * @author 17914

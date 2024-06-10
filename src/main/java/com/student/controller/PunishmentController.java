@@ -4,6 +4,8 @@ import com.student.common.BaseEntity;
 import com.student.common.R;
 import com.student.domain.entity.Punishment;
 import com.student.domain.entity.StudentPunishment;
+import com.student.domain.vo.PunishmentVo;
+import com.student.domain.vo.StudentPunishmentVo;
 import com.student.service.PunishmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -17,17 +19,15 @@ public class PunishmentController {
     @Autowired
     private PunishmentService punishmentService;
 
+
     /**
      * 查询处分记录
      * @param studentId 学生id
      * @return 处分记录集合
      */
     @GetMapping
-    public R<List<Punishment>> list(Long studentId) {
-        List<Punishment> list = punishmentService.lambdaQuery()
-                .eq(studentId != null, Punishment::getId, studentId)
-                .orderByDesc(BaseEntity::getCreateTime)
-                .list();
+    public R<List<PunishmentVo>> list(Long studentId) {
+        List<PunishmentVo> list = punishmentService.list(studentId);
         return R.ok(list);
     }
 
@@ -36,7 +36,7 @@ public class PunishmentController {
      * @param sp 处分集合
      */
     @PostMapping
-    public R<Void> add(List<StudentPunishment> sp) {
+    public R<Void> add(StudentPunishmentVo sp) {
         punishmentService.saveList(sp);
         return R.ok();
     }

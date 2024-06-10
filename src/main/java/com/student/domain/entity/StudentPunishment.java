@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -31,9 +33,20 @@ public class StudentPunishment extends BaseEntity implements Serializable {
     private Long studentId;
 
     /**
-     * 处分等级
+     * 处分等级 (前端传输时)
      */
     private Integer punishmentLevel;
+
+    /**
+     * 1表示通报批评
+     */
+    private Integer criticism;
+
+//    /**
+//     * 第几次通报批评
+//     */
+//    @TableField(exist = false)
+//    private Integer criticismNum;
 
     /**
      * 备注
@@ -55,6 +68,12 @@ public class StudentPunishment extends BaseEntity implements Serializable {
      * 处分时间
      */
     private Date punishmentTime;
+
+    /**
+     * 变化(up down noChange)
+     */
+    @TableField(value = "`change`")
+    private String change;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
