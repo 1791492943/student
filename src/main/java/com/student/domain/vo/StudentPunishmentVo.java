@@ -16,7 +16,7 @@ public class StudentPunishmentVo {
     /**
      * 等级变化
      */
-    private Integer change;
+    private Integer changeLevel;
 
     /**
      * 年份

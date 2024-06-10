@@ -18,13 +18,13 @@ import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 /**
-* @author 17914
-* @description 针对表【punishment(处分表)】的数据库操作Service实现
-* @createDate 2024-06-05 20:38:45
-*/
+ * @author 17914
+ * @description 针对表【punishment(处分表)】的数据库操作Service实现
+ * @createDate 2024-06-05 20:38:45
+ */
 @Service
 public class PunishmentServiceImpl extends ServiceImpl<PunishmentMapper, Punishment>
-    implements PunishmentService{
+        implements PunishmentService {
 
     @Autowired
     private StudentMapper studentMapper;
@@ -40,16 +40,29 @@ public class PunishmentServiceImpl extends ServiceImpl<PunishmentMapper, Punishm
 
     @Override
     public void saveList(StudentPunishmentVo sp) {
-        if(sp.getStudentIds().size() > 1){
-            List<Long> list = sp.getStudentIds();
-            List<Student> students = studentMapper.selectBatchIds(list);
-            Set<Integer> collect = students.stream().map(Student::getLevel).collect(Collectors.toSet());
-            if(collect.size() > 1){
-                throw new RuntimeException("处分等级不一致 无法批量操作");
+        List<Student> students = studentMapper.selectBatchIds(sp.getStudentIds());
+        for (Student student : students) {
+            StudentPunishment studentPunishment = new StudentPunishment();
+            studentPunishment.setStudentId(student.getId());
+            studentPunishment.setCriticism(sp.getCriticism());
+            studentPunishment.setRemark(sp.getRemark());
+            studentPunishment.setYear(sp.getYear());
+            studentPunishment.setSemester(sp.getSemester());
+            studentPunishment.setPunishmentTime(sp.getPunishmentTime());
+            //设置等级
+            if (sp.getCriticism() == 1) {
+                LambdaQueryWrapper<StudentPunishment> qw = new LambdaQueryWrapper<>();
+                qw.eq(StudentPunishment::getStudentId, student.getId());
+                qw.eq(StudentPunishment::getYear, sp.getYear());
+                qw.eq(StudentPunishment::getSemester, sp.getSemester());
+                Long count = studentPunishmentMapper.selectCount(qw);
+                studentPunishment.setChange(count % 2 == 1 ? "up" : "noChange");
+                studentPunishment.setPunishmentLevel(count % 2 == 1 ? student.getLevel() + 1 : student.getLevel());
+            } else {
+                studentPunishment.setPunishmentLevel(student.getLevel() + sp.getChangeLevel());
+                studentPunishment.setChange(sp.getChangeLevel() < 0 ? "down" : "up");
             }
         }
-
-        //todo 查出学生 然后设置StudentPunishment
 
 
 //        for (StudentPunishment studentPunishment : sp) {
@@ -74,20 +87,20 @@ public class PunishmentServiceImpl extends ServiceImpl<PunishmentMapper, Punishm
                         .eq(studentId != null, StudentPunishment::getStudentId, studentId)
                         .orderByDesc(StudentPunishment::getPunishmentTime)
         );
-        if(studentPunishments.isEmpty()) return List.of();
+        if (studentPunishments.isEmpty()) return List.of();
 
         Map<Long, Student> studentMap = new HashMap<>();
         studentMapper.selectList(null).forEach(student -> studentMap.put(student.getId(), student));
 
         Map<Long, Class> classMap = new HashMap<>();
-        classMapper.selectList(null).forEach(c -> classMap.put(c.getId(),c));
+        classMapper.selectList(null).forEach(c -> classMap.put(c.getId(), c));
 
-        Map<Integer,Punishment> punishmentMap = new HashMap<>();
-        baseMapper.selectList(null).forEach(p -> punishmentMap.put(p.getLevel(),p));
+        Map<Integer, Punishment> punishmentMap = new HashMap<>();
+        baseMapper.selectList(null).forEach(p -> punishmentMap.put(p.getLevel(), p));
 
-        Map<Long,List<Class>> studentClassMap = new HashMap<>();
+        Map<Long, List<Class>> studentClassMap = new HashMap<>();
         studentClassMapper.selectList(null).forEach(sc ->
-                studentClassMap.computeIfAbsent(sc.getStudentId(), k->new ArrayList<>()).add(classMap.get(sc.getClassId())));
+                studentClassMap.computeIfAbsent(sc.getStudentId(), k -> new ArrayList<>()).add(classMap.get(sc.getClassId())));
 
         return studentPunishments.stream().map(item -> {
             PunishmentVo punishmentVo = new PunishmentVo();

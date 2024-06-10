@@ -33,7 +33,7 @@ public class StudentPunishment extends BaseEntity implements Serializable {
     private Long studentId;
 
     /**
-     * 处分等级 (前端传输时)
+     * 处分等级
      */
     private Integer punishmentLevel;
 
