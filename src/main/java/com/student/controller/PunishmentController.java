@@ -22,12 +22,12 @@ public class PunishmentController {
 
     /**
      * 查询处分记录
-     * @param studentId 学生id
+     * @param studentCode 学生学号
      * @return 处分记录集合
      */
     @GetMapping
-    public R<List<PunishmentVo>> list(Long studentId) {
-        List<PunishmentVo> list = punishmentService.list(studentId);
+    public R<List<PunishmentVo>> list(String studentCode) {
+        List<PunishmentVo> list = punishmentService.list(studentCode);
         return R.ok(list);
     }
 

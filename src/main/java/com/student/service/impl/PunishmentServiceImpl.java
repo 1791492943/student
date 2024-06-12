@@ -1,6 +1,7 @@
 package com.student.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.student.domain.entity.Class;
 import com.student.domain.entity.Punishment;
@@ -81,10 +82,14 @@ public class PunishmentServiceImpl extends ServiceImpl<PunishmentMapper, Punishm
     }
 
     @Override
-    public List<PunishmentVo> list(Long studentId) {
+    public List<PunishmentVo> list(String studentCode) {
+        List<Student> students = studentMapper.selectList(new LambdaQueryWrapper<Student>().eq(ObjectUtils.isNotEmpty(studentCode), Student::getStudentCode, studentCode));
+        if(students.isEmpty()) return new ArrayList<>();
+        List<Long> idList = students.stream().map(Student::getId).toList();
+
         List<StudentPunishment> studentPunishments = studentPunishmentMapper.selectList(
                 new LambdaQueryWrapper<StudentPunishment>()
-                        .eq(studentId != null, StudentPunishment::getStudentId, studentId)
+                        .in(StudentPunishment::getStudentId, idList)
                         .orderByDesc(StudentPunishment::getPunishmentTime)
         );
         if (studentPunishments.isEmpty()) return List.of();

@@ -19,6 +19,6 @@ public interface PunishmentService extends IService<Punishment> {
 
     void removeId(Long id);
 
-    List<PunishmentVo> list(Long studentId);
+    List<PunishmentVo> list(String studentCode);
 
 }
